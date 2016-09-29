@@ -127,7 +127,6 @@ public class KeyMap extends Saveable {
 		
 		addPrimary(keyStroke(KeyEvent.VK_N, false), StandardCommand.INSERT_0); 
 		addPrimary(keyStroke(KeyEvent.VK_M, false), StandardCommand.INSERT_0); 
-		//addPrimary(keyStroke(KeyEvent.VK_COMMA, false), StandardCommand.INS); 
 		addPrimary(keyStroke(KeyEvent.VK_PERIOD, false), StandardCommand.ADD_DECIMAL); 
 		addPrimary(keyStroke(KeyEvent.VK_J, false), StandardCommand.INSERT_1); 
 		addPrimary(keyStroke(KeyEvent.VK_K, false), StandardCommand.INSERT_2); 
@@ -135,7 +134,6 @@ public class KeyMap extends Saveable {
 		addPrimary(keyStroke(KeyEvent.VK_U, false), StandardCommand.INSERT_4); 
 		addPrimary(keyStroke(KeyEvent.VK_I, false), StandardCommand.INSERT_5); 
 		addPrimary(keyStroke(KeyEvent.VK_O, false), StandardCommand.INSERT_6); 
-		//addPrimary(keyStroke(KeyEvent.VK_SEMICOLON, false), StandardCommand.ADD_DECIMAL); 
 		
 		addPrimary(keyStroke(KeyEvent.VK_H, false), StandardCommand.NEG); 
 		

@@ -234,7 +234,7 @@ public enum StandardCommand implements Command {
 	}),
 	MACRO_RUN("macroRun", "<run>", true, (Calculator calc) -> {
 		if (calc.getCurrentMacro() != null) {
-			calc.runMacro();
+			calc.runCurrentMacro();
 			return true;
 		} else {
 			return false;
@@ -250,7 +250,7 @@ public enum StandardCommand implements Command {
 		return true;
 	}), 
 	DRG("drg", "<drg>", true, (Calculator calc) -> {
-		calc.setNextAngleMode();
+		calc.cycleAngleMode();
 		return true;
 	}),
 	EXIT("exit", "<xit>", 0, (Stack stack) -> System.exit(0), "quit", "q"),

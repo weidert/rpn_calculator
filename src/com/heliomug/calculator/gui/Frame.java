@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -116,10 +115,9 @@ public class Frame extends JFrame implements Consumer<Command> {
 		tabbedPane.setTabPlacement(JTabbedPane.TOP);
 		
 		tabbedPane.setFocusable(false);
-		
 		tabbedPane.addTab("Calculator", null, makeCalculatorPanel(), "The Calculator");
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_C);
-		tabbedPane.addTab("Macros", null, new PanelMacro(), "List of Macros");
+		tabbedPane.addTab("Macro Bank", null, new PanelMacro(), "List of Macros");
 		tabbedPane.setMnemonicAt(1, KeyEvent.VK_M);
 		tabbedPane.addTab("Command History", null, new PanelCommandHistory(), "Record of every command executed");
 		tabbedPane.setMnemonicAt(2, KeyEvent.VK_H);
@@ -148,8 +146,14 @@ public class Frame extends JFrame implements Consumer<Command> {
 	
 	private void handleKeyEvent(KeyEvent e) {
 		int keyCode = e.getKeyCode();
-		if (keyCode == KeyEvent.VK_D && e.isControlDown()) {
-			exit();
+		if (e.isControlDown()) {
+			if (keyCode == KeyEvent.VK_D) { 
+				exit();
+			} else if (keyCode == KeyEvent.VK_PAGE_DOWN) {
+				
+			} else if (keyCode == KeyEvent.VK_PAGE_UP) {
+				
+			}
 		} else if (keyCode == KeyEvent.VK_SEMICOLON) {
 			mode = MODE_COMMAND;
 		} else if (keyCode  == KeyEvent.VK_SLASH && !e.isShiftDown()) {
@@ -194,7 +198,7 @@ public class Frame extends JFrame implements Consumer<Command> {
 	private void processString() {
 		if (mode == MODE_MACRO_NAME) {
 			Macro macro = getCalculator().getCurrentMacro();
-			if (macro != null) {
+			if (macro != null && !getCalculator().commandExists(currentString)) {
 				macro.setName(currentString);
 			}
 		} else if (mode == MODE_COMMAND) {
@@ -210,7 +214,7 @@ public class Frame extends JFrame implements Consumer<Command> {
 	}
 
 	private void autoComplete(String prefix) {
-		List<Command> commands = findCommands(currentString);
+		List<Command> commands = getCalculator().lookupCommands(currentString);
 		if (commands.size() == 0) {
 			currentString = "";
 			returnToStandardMode();
@@ -226,17 +230,6 @@ public class Frame extends JFrame implements Consumer<Command> {
 			}
 			JOptionPane.showMessageDialog(this, sb.toString(), "Multiple Options", JOptionPane.INFORMATION_MESSAGE);
 		}
-	}
-	
-	private List<Command> findCommands(String prefix) {
-		List<Command> li = new ArrayList<>();
-		li.addAll(StandardCommand.getCandidates(prefix));
-		for (Macro macro : getCalculator().getMacroList()) {
-			if (macro.hasPrefix(prefix)) {
-				li.add(macro);
-			}
-		}
-		return li;
 	}
 	
 	public String getCurrentString() { 

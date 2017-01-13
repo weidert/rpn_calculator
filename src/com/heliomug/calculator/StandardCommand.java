@@ -267,6 +267,7 @@ public enum StandardCommand implements Command {
 		}
 		return true;
 	}), 
+	MACRO_REMOVE("macroRemove", "<rmm>", false, (Calculator calc) -> calc.removeCurrentMacro()),
 	DRG("drg", "<drg>", true, (Calculator calc) -> {
 		calc.cycleAngleMode();
 		return true;

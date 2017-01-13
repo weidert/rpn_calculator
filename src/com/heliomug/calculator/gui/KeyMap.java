@@ -131,6 +131,7 @@ public class KeyMap {
 		
 		addMapping(VK_OPEN_BRACKET, ABS, false);
 		addMapping(VK_CLOSE_BRACKET, SIGN, false);
+		addMapping(VK_END, MACRO_REMOVE, true);
 		addMapping(VK_HOME, UNDO, false);
 		addMapping(VK_HOME, EXIT, true);
 		addMapping(VK_DELETE, CLEAR_ENTRY, false);

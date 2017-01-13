@@ -98,6 +98,7 @@ public class KeyMap {
 		addMapping(VK_Y, LN, false); 
 		addMapping(VK_H, EXP10, true);
 		addMapping(VK_Y, LOG, true); 
+		addMapping(VK_P, PI, false); 
 
 		addMapping(VK_Z, COMBO, false);
 		addMapping(VK_Z, PERM, true);

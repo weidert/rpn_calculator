@@ -56,7 +56,7 @@ public class PanelStatus extends JPanel{
 		Supplier<String> textSupplier;
 
 		public StatusLabel(Supplier<String> sup) {
-			super();
+			super("   ");
 			textSupplier = () -> String.format(" %s ", sup.get());
 			setHorizontalAlignment(SwingConstants.RIGHT);
 			setFont(Frame.MESSAGE_FONT);

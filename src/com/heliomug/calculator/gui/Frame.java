@@ -105,7 +105,7 @@ public class Frame extends JFrame implements Consumer<Command> {
 				super.paint(g);
 			}
 		};
-		tabbedPane.setTabPlacement(JTabbedPane.BOTTOM);
+		tabbedPane.setTabPlacement(JTabbedPane.TOP);
 		
 		tabbedPane.setFocusable(false);
 		

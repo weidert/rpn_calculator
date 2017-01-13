@@ -290,7 +290,7 @@ public class NumDouble implements Num {
 		if (value > Long.MAX_VALUE || value < Long.MIN_VALUE) {
 			return String.valueOf(value);
 		} else {
-			String fmt = "%." + dec + "f";
+			String fmt = "%,." + dec + "f";
 			return String.format(fmt, value);
 		}
 	}
@@ -299,11 +299,11 @@ public class NumDouble implements Num {
 		if (value > Long.MAX_VALUE || value < Long.MIN_VALUE) {
 			return String.valueOf(value);
 		} else if (decimalPlace == 0) {
-			return String.valueOf((long)value);
+			return String.format("%,d", (long)value);
 		} else if (decimalPlace == 1) {
-			return String.valueOf((long)value) + ".";
+			return String.format("%,d.", (long)value);
 		} else {
-			String fmt = "%." + (decimalPlace - 1) + "f";
+			String fmt = "%,." + (decimalPlace - 1) + "f";
 			return String.format(fmt, value);
 		}
 	}

@@ -38,6 +38,7 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 		status = "";
 	}
 	
+	
 	public boolean isEntryClears() { 
 		return isEntryClears; 
 	}
@@ -101,6 +102,9 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 	
 	public void removeMacro(Macro macro) {
 		macroList.remove(macro);
+		if (currentMacro == macro) {
+			currentMacro = null;
+		}
 	}
 	
 	public void setCurrentMacro(Macro macro) {

@@ -38,41 +38,44 @@ public class PanelMacro extends PanelUpdateable {
 		GridBagConstraints c = new GridBagConstraints();
 
 		List<Macro> macroList = Frame.getCalculator().getMacroList();
-		
-		for (int i = 0 ; i < macroList.size() ; i++) {
-			Macro macro = macroList.get(i);
-			c.gridy = i;
-			c.fill = GridBagConstraints.BOTH;
-			c.gridx = 0;
-			JLabel label = new JLabel(String.format(" %s ", macro.getName())); 
-			label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-			panel.add(label, c);
-			c.gridx = 1;
-			panel.add(new MacroButton("Run", (ActionEvent e) -> {
-				Frame.getCalculator().setAndRunMacro(macro);
-				Frame.getFrame().showCalculator();
-			}), c);
-			c.gridx = 2;
-			panel.add(new MacroButton("Show", (ActionEvent e) -> {
-				String listing = macro.getListing();
-				String title = "Listing for Macro " + macro.getName();
-				JOptionPane.showMessageDialog(Frame.getFrame(), listing, title, JOptionPane.INFORMATION_MESSAGE);
-			}), c);
-			c.gridx = 3;
-			panel.add(new MacroButton("Rename", (ActionEvent e) -> {
-				String name = (String)JOptionPane.showInputDialog(Frame.getFrame(), "New name?", macro.getName());
-				macro.setName(name);
-				PanelMacro.this.update();
-			}), c);
-			c.gridx = 4;
-			panel.add(new MacroButton("Delete", (ActionEvent e) -> {
-				String message = "Are you sure you want to delete macro " + macro.getName() + "?";
-				int response = JOptionPane.showConfirmDialog(Frame.getFrame(), message);
-				if (response == JOptionPane.YES_OPTION) {
-					Frame.getCalculator().removeMacro(macro);
-				}
-				PanelMacro.this.update();
-			}), c);
+		if (macroList.size() == 0) {
+			panel.add(new JLabel("no macros yet!"));
+		} else {
+			for (int i = 0 ; i < macroList.size() ; i++) {
+				Macro macro = macroList.get(i);
+				c.gridy = i;
+				c.fill = GridBagConstraints.BOTH;
+				c.gridx = 0;
+				JLabel label = new JLabel(String.format(" %s ", macro.getName())); 
+				label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+				panel.add(label, c);
+				c.gridx = 1;
+				panel.add(new MacroButton("Run", (ActionEvent e) -> {
+					Frame.getCalculator().setAndRunMacro(macro);
+					Frame.getFrame().showCalculator();
+				}), c);
+				c.gridx = 2;
+				panel.add(new MacroButton("Show", (ActionEvent e) -> {
+					String listing = macro.getListing();
+					String title = "Listing for Macro " + macro.getName();
+					JOptionPane.showMessageDialog(Frame.getFrame(), listing, title, JOptionPane.INFORMATION_MESSAGE);
+				}), c);
+				c.gridx = 3;
+				panel.add(new MacroButton("Rename", (ActionEvent e) -> {
+					String name = (String)JOptionPane.showInputDialog(Frame.getFrame(), "New name?", macro.getName());
+					macro.setName(name);
+					PanelMacro.this.update();
+				}), c);
+				c.gridx = 4;
+				panel.add(new MacroButton("Delete", (ActionEvent e) -> {
+					String message = "Are you sure you want to delete macro " + macro.getName() + "?";
+					int response = JOptionPane.showConfirmDialog(Frame.getFrame(), message);
+					if (response == JOptionPane.YES_OPTION) {
+						Frame.getCalculator().removeMacro(macro);
+					}
+					PanelMacro.this.update();
+				}), c);
+			}
 		}
 		panel.revalidate();
 	}

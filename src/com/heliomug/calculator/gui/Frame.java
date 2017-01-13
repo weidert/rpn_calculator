@@ -157,7 +157,12 @@ public class Frame extends JFrame implements Consumer<Command> {
 		} else if (keyCode == KeyEvent.VK_SEMICOLON) {
 			mode = MODE_COMMAND;
 		} else if (keyCode  == KeyEvent.VK_SLASH && !e.isShiftDown()) {
-			mode = MODE_MACRO_NAME;
+			if (getCalculator().getCurrentMacro() == null) {
+				String message = String.format("No macro to name yet!");
+				JOptionPane.showMessageDialog(this, message, "No macro!", JOptionPane.INFORMATION_MESSAGE);
+			} else {
+				mode = MODE_MACRO_NAME;
+			}
 		} else if (keyCode  == KeyEvent.VK_ESCAPE) {
 			returnToStandardMode();
 		} else {
@@ -198,19 +203,43 @@ public class Frame extends JFrame implements Consumer<Command> {
 	private void processString() {
 		if (mode == MODE_MACRO_NAME) {
 			Macro macro = getCalculator().getCurrentMacro();
-			if (macro != null && !getCalculator().commandExists(currentString)) {
-				macro.setName(currentString);
+			if (macro != null) {
+				if (!getCalculator().commandExists(currentString)) {
+					macro.setName(currentString.trim());
+					returnToStandardMode();
+				} else {
+					String message = String.format("Name \"%s\" is already taken!", currentString);
+					JOptionPane.showMessageDialog(this, message, "Name taken!", JOptionPane.INFORMATION_MESSAGE);
+				}
+			} else {
+				String message = String.format("No macro to name!");
+				JOptionPane.showMessageDialog(this, message, "No macro!", JOptionPane.INFORMATION_MESSAGE);
+				returnToStandardMode();
 			}
 		} else if (mode == MODE_COMMAND) {
 			Command command = StandardCommand.getCommand(currentString);
+			Macro macro = getCalculator().lookupMacro(currentString);
 			if (command != null) {
 				accept(command);
-			} else {
-				Macro macro = getCalculator().lookupMacro(currentString);
+				returnToStandardMode();
+			} else if (macro != null) {
 				getCalculator().setAndRunMacro(macro);
+				returnToStandardMode();
+			} else {
+				List<Command> commands = getCalculator().lookupCommands(currentString);
+				if (commands.size() == 0) {
+					String message = String.format("No commands begin with \"%s\"", currentString);
+					JOptionPane.showMessageDialog(this, message, "No Commands!", JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					StringBuilder sb = new StringBuilder();
+					sb.append("More than one command with this prefix:\n");
+					for (Command com : commands) {
+						sb.append(com.getName() + "\n");
+					}
+					JOptionPane.showMessageDialog(this, sb.toString(), "Multiple Options", JOptionPane.INFORMATION_MESSAGE);
+				}
 			}
 		} 
-		returnToStandardMode();
 	}
 
 	private void autoComplete(String prefix) {
@@ -219,16 +248,32 @@ public class Frame extends JFrame implements Consumer<Command> {
 			currentString = "";
 			returnToStandardMode();
 			String message = String.format("No commands begin with \"%s\"", prefix);
-			JOptionPane.showMessageDialog(this, message, "Multiple Options", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(this, message, "No Commands!", JOptionPane.INFORMATION_MESSAGE);
 		} else if (commands.size() == 1) {
 			currentString = commands.get(0).getName();
 		} else {
-			StringBuilder sb = new StringBuilder();
-			sb.append("More than one option:\n");
-			for (Command command : commands) {
-				sb.append(command.getName() + "\n");
+			currentString = longestCommonPrefix(commands).trim();
+		}
+	}
+	
+	public String longestCommonPrefix(List<Command> commands) {
+		if (commands.size() == 0) {
+			return "";
+		} else if (commands.size() == 1) {
+			return commands.get(0).getName();
+		} else {
+			String longest = "";
+			outerloop:
+			for (int i = 0 ; i < commands.get(0).getName().length() ; i++) {
+				char c = commands.get(0).getName().charAt(i);
+				for (int j = 1 ; j < commands.size() ; j++) {
+					if (commands.get(j).getName().charAt(i) != c) {
+						break outerloop;
+					}
+				}
+				longest += c;
 			}
-			JOptionPane.showMessageDialog(this, sb.toString(), "Multiple Options", JOptionPane.INFORMATION_MESSAGE);
+			return longest;
 		}
 	}
 	

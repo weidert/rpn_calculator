@@ -172,7 +172,7 @@ public class Frame extends JFrame implements Consumer<Command> {
 				sb.append("[no history yet]");
 			} else {
 				for (int i = 0 ; i < stackList.size() ; i++) {
-					Stack stack = stackList.get(stackList.size() - 1 - i);
+					Stack stack = stackList.get(i);
 					sb.append(String.format("STACK %d:\n%s\n", i, stack));
 				}
 			}

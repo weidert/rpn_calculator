@@ -253,7 +253,8 @@ public enum StandardCommand implements Command {
 		calc.setNextAngleMode();
 		return true;
 	}),
-	EXIT("exit", "<xit>", 0, (Stack stack) -> System.exit(0), "quit", "q");
+	EXIT("exit", "<xit>", 0, (Stack stack) -> System.exit(0), "quit", "q"),
+	ERROR("error", "<err>", false, (Calculator calc) -> false);
 	
 	public static Command getCommand(String string) {
 		for (Command command : StandardCommand.values()) {

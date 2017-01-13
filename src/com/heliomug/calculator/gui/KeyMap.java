@@ -25,7 +25,7 @@ public class KeyMap {
 		REPLACEMENT_MAP.put("Slash", "/");
 		REPLACEMENT_MAP.put("Equals", "=");
 		REPLACEMENT_MAP.put("Backspace", "\u2190");
-		REPLACEMENT_MAP.put("Home", "Home");
+		REPLACEMENT_MAP.put("Home", "Hom");
 		REPLACEMENT_MAP.put("Insert", "Ins");
 		REPLACEMENT_MAP.put("Delete", "Del");
 		REPLACEMENT_MAP.put("Period", ".");

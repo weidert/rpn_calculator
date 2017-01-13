@@ -42,7 +42,7 @@ public class Frame extends JFrame implements Consumer<Command> {
 	public static final Font BIG_BUTTON_FONT = new Font(Font.MONOSPACED, Font.BOLD, 16);
 	public static final Font SMALL_BUTTON_FONT = new Font(Font.MONOSPACED, Font.PLAIN, 10);
 	public static final Font SHORTCUT_FONT = new Font(Font.MONOSPACED, Font.PLAIN, 10);
-
+	
 	public static final int DECIMAL_PLACES_TO_SHOW = 4;
 	public static final int STACK_LINES = 4;
 	public static final String EMPTY_STRING = "---";

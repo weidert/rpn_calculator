@@ -31,9 +31,9 @@ public class MenuBar extends JMenuBar {
 		item.addActionListener((ActionEvent e) -> Frame.getFrame().saveAs());
 		menu.add(item);
 		menu.addSeparator();
-		item = new JMenuItem("Load Macros", KeyEvent.VK_L);
+		item = new JMenuItem("Load Macros", KeyEvent.VK_M);
 		item.addActionListener((ActionEvent e) -> Frame.getFrame().loadMacros());
-		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_DOWN_MASK));
+		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_DOWN_MASK));
 		menu.add(item);
 		menu.addSeparator();
 		item = new JMenuItem("About", KeyEvent.VK_B);

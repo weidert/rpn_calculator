@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.function.Consumer;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -79,6 +80,13 @@ public class Frame extends JFrame implements Consumer<Command> {
 		
 		setJMenuBar(new MenuBar());
 
+		try {
+			setIconImage(ImageIO.read(new File("res/heliomug256.png")));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		add(makeTabbedPane());
 		
 		pack();

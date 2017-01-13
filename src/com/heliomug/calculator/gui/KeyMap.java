@@ -99,6 +99,7 @@ public class KeyMap {
 		addMapping(VK_H, EXP10, true);
 		addMapping(VK_Y, LOG, true); 
 		addMapping(VK_P, PI, false); 
+		addMapping(VK_P, DRG, true); 
 
 		addMapping(VK_Z, COMBO, false);
 		addMapping(VK_Z, PERM, true);
@@ -123,10 +124,12 @@ public class KeyMap {
 		addMapping(VK_E, SQUARE, true); 
 		addMapping(VK_R, RECIP, false);
 		addMapping(VK_T, MACRO_TOGGLE, false); 
+		addMapping(VK_T, STORE, true); 
 		
 		addMapping(VK_DELETE, CLEAR_ENTRY, false);
 		addMapping(VK_DELETE, CLEAR_STACK, true);
 		addMapping(VK_PAGE_DOWN, CYCLE, false);
+		addMapping(VK_W, CYCLE, true);
 		addMapping(VK_PAGE_UP, REVERSE_CYCLE, false);
 		addMapping(VK_SLASH, RAND, true);
 	}

@@ -51,6 +51,10 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 		return isRecording; 
 	}
 	
+	public double getTop() {
+		return stack.peek().getDouble();
+	}
+	
 	public Stack getStack() { 
 		return stack; 
 	}
@@ -78,6 +82,26 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 		return null;
 	}
 	
+	public boolean commandExists(String name) {
+		Command command = StandardCommand.getCommand(name);
+		if (command != null || lookupMacro(name) != null) {
+			return true;
+		}
+		return false;
+	}
+
+	public List<Command> lookupCommands(String prefix) {
+		List<Command> li = new ArrayList<>();
+		li.addAll(StandardCommand.getCandidates(prefix));
+		for (Macro macro : getMacroList()) {
+			if (macro.hasPrefix(prefix)) {
+				li.add(macro);
+			}
+		}
+		return li;
+	}
+	
+
 	public List<Macro> getMacroList() { 
 		return macroList; 
 	}
@@ -87,7 +111,7 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 	}
 	
 	
-	public void setNextAngleMode() { 
+	public void cycleAngleMode() { 
 		angleMode = angleMode.next(); 
 	}
 	
@@ -100,27 +124,6 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 	}
 
 	
-	public void removeMacro(Macro macro) {
-		macroList.remove(macro);
-		if (currentMacro == macro) {
-			currentMacro = null;
-		}
-	}
-	
-	public void setCurrentMacro(Macro macro) {
-		currentMacro = macro;
-		if (!macroList.contains(macro)) {
-			macroList.add(currentMacro);
-		}
-	}
-	
-	public void setAndRunMacro(Macro macro) {
-		if (macro != null) {
-			setCurrentMacro(macro);
-			runMacro();
-		}
-	}
-
 	public Num toRadians(Num num) {
 		return num.div(new NumDouble(angleMode.getFactor()));
 	}
@@ -130,12 +133,26 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 	}
 
 	
-	public void runMacro() {
+	public void setCurrentMacro(Macro macro) {
+		currentMacro = macro;
+		if (!macroList.contains(macro)) {
+			macroList.add(currentMacro);
+		}
+	}
+	
+	public void runCurrentMacro() {
 		if (currentMacro != null) {
 			apply(currentMacro);
 		}
 	}
 	
+	public void setAndRunMacro(Macro macro) {
+		if (macro != null) {
+			setCurrentMacro(macro);
+			runCurrentMacro();
+		}
+	}
+
 	public void startMacro() {
 		setCurrentMacro(new Macro());
 		isRecording = true;
@@ -143,6 +160,13 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 
 	public void stopMacro() {
 		isRecording = false;
+	}
+	
+	public void removeMacro(Macro macro) {
+		macroList.remove(macro);
+		if (currentMacro == macro) {
+			currentMacro = null;
+		}
 	}
 	
 	

@@ -253,6 +253,7 @@ public enum StandardCommand implements Command {
 		calc.cycleAngleMode();
 		return true;
 	}),
+	UNDO("undo", "<udo>", true, (Calculator calc) -> calc.undo()),
 	EXIT("exit", "<xit>", 0, (Stack stack) -> System.exit(0), "quit", "q"),
 	ERROR("error", "<err>", false, (Calculator calc) -> false);
 	

@@ -24,12 +24,15 @@ import javax.swing.event.ChangeEvent;
 import com.heliomug.calculator.Calculator;
 import com.heliomug.calculator.Command;
 import com.heliomug.calculator.Macro;
+import com.heliomug.calculator.Stack;
 import com.heliomug.calculator.StandardCommand;
 import com.heliomug.utils.FileUtils;
 
 @SuppressWarnings("serial")
 public class Frame extends JFrame implements Consumer<Command> {
 	
+	public static final Color INACTIVE_COLOR = new Color(127, 127, 127);
+	public static final Color ACTIVE_COLOR = new Color(200, 255, 200);
 	public static final Color TEXT_COLOR = new Color(255, 255, 255);
 	public static final Color BACKGROUND_COLOR = new Color(0, 0, 127);
 	public static final Color BORDER_COLOR = Color.BLACK;
@@ -43,10 +46,6 @@ public class Frame extends JFrame implements Consumer<Command> {
 	public static final int DECIMAL_PLACES_TO_SHOW = 4;
 	public static final int STACK_LINES = 4;
 	public static final String EMPTY_STRING = "---";
-	
-	private static final int MODE_STANDARD = 0;
-	private static final int MODE_COMMAND = 1;
-	private static final int MODE_MACRO_NAME = 2;
 	
 	private static Frame theFrame;
 	
@@ -64,7 +63,7 @@ public class Frame extends JFrame implements Consumer<Command> {
 	
 	private File lastSaveFile;
 	
-	private int mode;
+	Mode mode;
 	
 	private String currentString;
 
@@ -76,7 +75,7 @@ public class Frame extends JFrame implements Consumer<Command> {
 
 		calculator = new Calculator();
 		currentString = "";
-		mode = MODE_STANDARD;
+		mode = Mode.STANDARD;
 		lastSaveFile = null;
 		showCalculator = true;
 		
@@ -117,19 +116,23 @@ public class Frame extends JFrame implements Consumer<Command> {
 		tabbedPane.setFocusable(false);
 		tabbedPane.addTab("Calculator", null, makeCalculatorPanel(), "The Calculator");
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_C);
-		tabbedPane.addTab("Macro Bank", null, new PanelMacro(), "List of Macros");
+		tabbedPane.addTab("Macros", null, new PanelMacro(), "List of Macros");
 		tabbedPane.setMnemonicAt(1, KeyEvent.VK_M);
-		tabbedPane.addTab("Command History", null, new PanelCommandHistory(), "Record of every command executed");
-		tabbedPane.setMnemonicAt(2, KeyEvent.VK_H);
+		tabbedPane.addTab("Commands", null, makeCommandHistoryPanel(), "Record of every command executed");
+		tabbedPane.setMnemonicAt(2, KeyEvent.VK_D);
+		tabbedPane.addTab("Stacks", null, makeStackHistoryPanel(), "Record of every stack state");
+		tabbedPane.setMnemonicAt(3, KeyEvent.VK_S);
 
 		tabbedPane.addChangeListener((ChangeEvent e) -> {
 			int index = tabbedPane.getSelectedIndex();
-			if (index == 1 || index == 2) {
+			if (index > 0) {
 				PanelUpdateable panel = (PanelUpdateable)tabbedPane.getSelectedComponent();
 				panel.update();
 			}
 		});
 
+		tabbedPane.setFocusable(false);
+		
 		return tabbedPane;
 	}
 
@@ -143,6 +146,40 @@ public class Frame extends JFrame implements Consumer<Command> {
 		return panel;
 	}
 	
+	private JPanel makeCommandHistoryPanel() {
+		JPanel panel = new PanelText(() -> {
+			List<Command> commandList = Frame.getCalculator().getCommandHistory();
+			StringBuilder sb = new StringBuilder();
+			sb.append("COMMAND HISTORY: \n\n");
+			if (commandList == null || commandList.size() == 0) {
+				sb.append("[no commands]");
+			} else {
+				for (Command command : commandList) {
+					sb.append(command.getAbbrev() + "\n");
+				}
+			}
+			return sb.toString();
+		});
+		return panel;
+	}
+	
+	private JPanel makeStackHistoryPanel() {
+		JPanel panel = new PanelText(() -> {
+			List<Stack> stackList = Frame.getCalculator().getStackHistory();
+			StringBuilder sb = new StringBuilder();
+			sb.append("STACK HISTORY: \n\n");
+			if (stackList == null || stackList.size() == 0) {
+				sb.append("[no history yet]");
+			} else {
+				for (int i = 0 ; i < stackList.size() ; i++) {
+					Stack stack = stackList.get(stackList.size() - 1 - i);
+					sb.append(String.format("STACK %d:\n%s\n", i, stack));
+				}
+			}
+			return sb.toString();
+		});
+		return panel;
+	}
 	
 	private void handleKeyEvent(KeyEvent e) {
 		int keyCode = e.getKeyCode();
@@ -155,18 +192,18 @@ public class Frame extends JFrame implements Consumer<Command> {
 				
 			}
 		} else if (keyCode == KeyEvent.VK_SEMICOLON) {
-			mode = MODE_COMMAND;
+			mode = Mode.COMMAND;
 		} else if (keyCode  == KeyEvent.VK_SLASH && !e.isShiftDown()) {
 			if (getCalculator().getCurrentMacro() == null) {
 				String message = String.format("No macro to name yet!");
 				JOptionPane.showMessageDialog(this, message, "No macro!", JOptionPane.INFORMATION_MESSAGE);
 			} else {
-				mode = MODE_MACRO_NAME;
+				mode = Mode.MACRO_NAME;
 			}
 		} else if (keyCode  == KeyEvent.VK_ESCAPE) {
 			returnToStandardMode();
 		} else {
-			if (mode == MODE_STANDARD) {
+			if (mode == Mode.STANDARD) {
 				// no control characters (shift, etc) allowed by themselves
 				if ((keyCode >= 32 && keyCode < 256) || keyCode == 10 || keyCode == 8) {
 					KeyStroke stroke = KeyStroke.getKeyStroke(keyCode, e.getModifiers());
@@ -196,12 +233,12 @@ public class Frame extends JFrame implements Consumer<Command> {
 	}
 
 	private void returnToStandardMode() {
-		mode = MODE_STANDARD;
+		mode = Mode.STANDARD;
 		currentString = "";
 	}
 	
 	private void processString() {
-		if (mode == MODE_MACRO_NAME) {
+		if (mode == Mode.MACRO_NAME) {
 			Macro macro = getCalculator().getCurrentMacro();
 			if (macro != null) {
 				if (!getCalculator().commandExists(currentString)) {
@@ -216,7 +253,7 @@ public class Frame extends JFrame implements Consumer<Command> {
 				JOptionPane.showMessageDialog(this, message, "No macro!", JOptionPane.INFORMATION_MESSAGE);
 				returnToStandardMode();
 			}
-		} else if (mode == MODE_COMMAND) {
+		} else if (mode == Mode.COMMAND) {
 			Command command = StandardCommand.getCommand(currentString);
 			Macro macro = getCalculator().lookupMacro(currentString);
 			if (command != null) {
@@ -255,6 +292,22 @@ public class Frame extends JFrame implements Consumer<Command> {
 			currentString = longestCommonPrefix(commands).trim();
 		}
 	}
+
+	
+	public Mode getMode() {
+		return this.mode;
+	}
+	
+	public String getCurrentString() { 
+		if (currentString.length() == 0) {
+			if (mode == Mode.COMMAND) {
+				return "command or macro?";
+			} else if (mode == Mode.MACRO_NAME) {
+				return "macro name?";
+			}
+		}
+		return currentString; 
+	}
 	
 	public String longestCommonPrefix(List<Command> commands) {
 		if (commands.size() == 0) {
@@ -277,25 +330,35 @@ public class Frame extends JFrame implements Consumer<Command> {
 		}
 	}
 	
-	public String getCurrentString() { 
-		if (currentString.length() == 0) {
-			if (mode == MODE_COMMAND) {
-				return "command or macro?";
-			} else if (mode == MODE_MACRO_NAME) {
-				return "macro name?";
-			}
-		}
-		return currentString; 
-	}
-	
 	public void showCalculator() {
 		showCalculator = true;
 		repaint();
 	}
 	
-	public void load() {
+	
+	public void loadMacros() {
 		try {
-			Calculator calc = (Calculator) FileUtils.readObject("Calculator", "calc");
+			Calculator calc = (Calculator) FileUtils.readObject("Select Calculator to Load Macros from", "Calculator", "calc");
+			if (calc != null) {
+				calculator.addMacros(calc.getMacroList());;
+				repaint();
+			}
+		} catch (FileNotFoundException e) {
+			String message = "File not found!  Sorry!";
+			JOptionPane.showMessageDialog(this, message, "Error!", JOptionPane.ERROR_MESSAGE);
+		} catch (ClassNotFoundException e) {
+			String message = "That doesn't seem to be a calculator!  Sorry!";
+			JOptionPane.showMessageDialog(this, message, "Error!", JOptionPane.ERROR_MESSAGE);
+		} catch (IOException e) {
+			String message = "IO Exception!  Sorry!";
+			JOptionPane.showMessageDialog(this, message, "Error!", JOptionPane.ERROR_MESSAGE);
+		}
+		showCalculator();
+	}
+	
+	public void open() {
+		try {
+			Calculator calc = (Calculator) FileUtils.readObject("Select Calculator to Open", "Calculator", "calc");
 			if (calc != null) {
 				calculator = calc;
 				repaint();
@@ -319,6 +382,8 @@ public class Frame extends JFrame implements Consumer<Command> {
 		} else {
 			try {
 				FileUtils.saveObject(calculator, lastSaveFile);
+				String message = "Calculator Saved!";
+				JOptionPane.showMessageDialog(this, message, "Calculator Saved!", JOptionPane.INFORMATION_MESSAGE);
 			} catch (FileNotFoundException e) {
 				String message = "File not found!  Sorry!";
 				JOptionPane.showMessageDialog(this, message, "Error!", JOptionPane.ERROR_MESSAGE);

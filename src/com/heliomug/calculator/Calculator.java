@@ -23,6 +23,7 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 	private List<Macro> macroList;
 	
 	transient private List<Command> commandHistory;
+	transient private List<Stack> stackHistory;
 	
 	transient private String status;
 	
@@ -30,6 +31,7 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 		stack = new Stack();
 		macroList = new ArrayList<>();
 		commandHistory = new ArrayList<>();
+		stackHistory = new ArrayList<>();
 		currentMacro = null;
 		isEntryEditable = false;
 		isEntryClears = true;
@@ -110,6 +112,10 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 		return commandHistory; 
 	}
 	
+	public List<Stack> getStackHistory() {
+		return stackHistory;
+	}
+	
 	
 	public void cycleAngleMode() { 
 		angleMode = angleMode.next(); 
@@ -132,6 +138,9 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 		return num.mult(new NumDouble(angleMode.getFactor()));
 	}
 
+	public void addMacros(List<Macro> li) {
+		macroList.addAll(li);
+	}
 	
 	public void setCurrentMacro(Macro macro) {
 		currentMacro = macro;
@@ -170,6 +179,16 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 	}
 	
 	
+	public boolean undo() {
+		if (stackHistory == null || stackHistory.size() == 0) {
+			return false;
+		} else {
+			stack = stackHistory.remove(stackHistory.size() - 1);
+			return true;
+		}
+	}
+	
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -189,22 +208,27 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 			return false;
 		} 
 		
-		if (command.isRecordable()) {
-			if (isRecording && !command.isMacro()) {
-				currentMacro.addCommand(command);
-			}
-		}
+		Stack preStack = stack.copy();
 		boolean success = command.apply(this);
-
 		if (success) {
 			if (command.isRecordable()) {
+				if (isRecording && !command.isMacro()) {
+					currentMacro.addCommand(command);
+				}
 				if (commandHistory == null) {
 					commandHistory = new ArrayList<>();
 				}
 				commandHistory.add(command);
 				status = command.getAbbrev();
 			} 
+			if (command != StandardCommand.UNDO) {
+				if (stackHistory == null) {
+					stackHistory = new ArrayList<>();
+				}
+				stackHistory.add(preStack);
+			}
 		} else {
+			stack = preStack;
 			status = ERROR_MESSAGE;
 		}
 		

@@ -47,7 +47,18 @@ public class PanelStatus extends JPanel{
 			return "macro: " + name;
 		});
 		subpanel.add(label, BorderLayout.WEST);
-		label = new StatusLabel(() -> Frame.getFrame().getCurrentString());
+		label = new StatusLabel(() -> Frame.getFrame().getCurrentString()) {
+			@Override
+			public void paint(Graphics g) {
+				if (Frame.getFrame().getMode() == Mode.STANDARD) {
+					setBackground(Frame.INACTIVE_COLOR);
+				} else {
+					setBackground(Frame.ACTIVE_COLOR);
+				}
+				setOpaque(true);
+				super.paint(g);
+			}
+		};
 		subpanel.add(label, BorderLayout.CENTER);
 		add(subpanel, BorderLayout.CENTER);
 	}

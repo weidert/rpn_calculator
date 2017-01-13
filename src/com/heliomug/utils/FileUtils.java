@@ -61,9 +61,15 @@ public class FileUtils {
     	return selectFile("Select File");
     }
 
+    
 	public static Object readObject(String fileType, String fileExtension) throws FileNotFoundException, IOException, ClassNotFoundException {
+		return readObject("Select File to Open", fileType, fileExtension);
+	}
+	
+	public static Object readObject(String title, String fileType, String fileExtension) throws FileNotFoundException, IOException, ClassNotFoundException {
 		JFileChooser fc = new JFileChooser();
 		fc.setFileFilter(new FileNameExtensionFilter(fileType, fileExtension)); 
+		fc.setDialogTitle(title);
 		int response = fc.showOpenDialog(null);
 
 		if (response == JFileChooser.APPROVE_OPTION) {

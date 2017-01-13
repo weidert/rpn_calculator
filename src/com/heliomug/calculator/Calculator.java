@@ -148,6 +148,7 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 		} else {
 			macroList.remove(currentMacro);
 			currentMacro = null;
+			isRecording = false;
 			return true;
 		}
 	}

@@ -84,12 +84,12 @@ public class NumDouble implements Num {
 	
 	@Override
 	public Num integerPart() {
-		return new NumDouble((int)value);
+		return new NumDouble((long)value);
 	}
 
 	@Override
 	public Num fractionalPart() {
-		return new NumDouble(value - (int)value);
+		return new NumDouble(value - (long)value);
 	}
 
 	@Override
@@ -271,9 +271,9 @@ public class NumDouble implements Num {
 	@Override
 	public Num backspace() {
 		if (decimalPlace == 1) {
-			return new NumDouble((int)value, 0);
+			return new NumDouble((long)value, 0);
 		} else if (decimalPlace == 0) {
-			return new NumDouble((int)(value / BASE));
+			return new NumDouble((long)(value / BASE));
 		} else {
 			long factor = (long)Math.pow(BASE, decimalPlace - 2);
 			double newVal = (long)(value * factor);

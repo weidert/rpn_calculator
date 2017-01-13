@@ -79,7 +79,7 @@ public class Frame extends JFrame implements Consumer<Command> {
 		
 		setJMenuBar(new MenuBar());
 
-		add(getTabbedPanel());
+		add(makeTabbedPane());
 		
 		pack();
 
@@ -94,7 +94,7 @@ public class Frame extends JFrame implements Consumer<Command> {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
-	private JTabbedPane getTabbedPanel() {
+	private JTabbedPane makeTabbedPane() {
 		JTabbedPane tabbedPane = new JTabbedPane() {
 			@Override
 			public void paint(Graphics g) {
@@ -109,7 +109,7 @@ public class Frame extends JFrame implements Consumer<Command> {
 		
 		tabbedPane.setFocusable(false);
 		
-		tabbedPane.addTab("Calculator", null, getCalculatorPanel(), "The Calculator");
+		tabbedPane.addTab("Calculator", null, makeCalculatorPanel(), "The Calculator");
 		tabbedPane.setMnemonicAt(0, KeyEvent.VK_C);
 		tabbedPane.addTab("Macros", null, new PanelMacro(), "List of Macros");
 		tabbedPane.setMnemonicAt(1, KeyEvent.VK_M);
@@ -127,7 +127,7 @@ public class Frame extends JFrame implements Consumer<Command> {
 		return tabbedPane;
 	}
 
-	private JPanel getCalculatorPanel() {
+	private JPanel makeCalculatorPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		panel.add(new PanelStack(), BorderLayout.NORTH);
@@ -189,7 +189,7 @@ public class Frame extends JFrame implements Consumer<Command> {
 			if (command != null) {
 				accept(command);
 			} else {
-				Macro macro = getCalculator().getMacro(currentString);
+				Macro macro = getCalculator().lookupMacro(currentString);
 				getCalculator().setAndRunMacro(macro);
 			}
 		} 
@@ -266,6 +266,8 @@ public class Frame extends JFrame implements Consumer<Command> {
 	@Override
 	public void accept(Command command) {
 		calculator.apply(command);
-		repaint();
+		if (command != null) {
+			showCalculator();
+		}
 	}
 }

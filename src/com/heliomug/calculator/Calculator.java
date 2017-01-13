@@ -38,15 +38,35 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 		status = "";
 	}
 	
-	public Stack getStack() { return stack; }
-	public boolean isEntryClears() { return isEntryClears; }
-	public boolean isEntryEditable() { return isEntryEditable; }
-	public boolean isRecording() { return isRecording; }
-	public boolean hasCurrentMacro() { return currentMacro != null; }
-	public String getStatus() { return status == null ? "" : status; }
-	public AngleMode getAngleMode() { return angleMode; }
-	public Macro getCurrentMacro() { return currentMacro; } 
-	public Macro getMacro(String name) {
+	public boolean isEntryClears() { 
+		return isEntryClears; 
+	}
+	
+	public boolean isEntryEditable() { 
+		return isEntryEditable; 
+	}
+	
+	public boolean isRecording() { 
+		return isRecording; 
+	}
+	
+	public Stack getStack() { 
+		return stack; 
+	}
+	
+	public String getStatus() { 
+		return status == null ? "" : status; 
+	}
+	
+	public AngleMode getAngleMode() { 
+		return angleMode; 
+	}
+
+	public Macro getCurrentMacro() { 
+		return currentMacro; 
+	} 
+	
+	public Macro lookupMacro(String name) {
 		// would be more efficient with a map, 
 		// but then have to deal with renaming behind map's back
 		for (Macro macro : macroList) {
@@ -56,24 +76,40 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 		}
 		return null;
 	}
-	public List<Macro> getMacroList() {
-		return macroList;
-	}
-	public List<Command> getCommandHistory() { return commandHistory; }
 	
-	public void setNextAngleMode() { angleMode = angleMode.next(); }
-	public void setEntryClears(boolean b) { isEntryClears = b; }
-	public void setEntryEditable(boolean b) { isEntryEditable = b; }
+	public List<Macro> getMacroList() { 
+		return macroList; 
+	}
+	
+	public List<Command> getCommandHistory() { 
+		return commandHistory; 
+	}
+	
+	
+	public void setNextAngleMode() { 
+		angleMode = angleMode.next(); 
+	}
+	
+	public void setEntryClears(boolean b) { 
+		isEntryClears = b; 
+	}
+	
+	public void setEntryEditable(boolean b) { 
+		isEntryEditable = b; 
+	}
 
+	
 	public void removeMacro(Macro macro) {
 		macroList.remove(macro);
 	}
+	
 	public void setCurrentMacro(Macro macro) {
 		currentMacro = macro;
 		if (!macroList.contains(macro)) {
 			macroList.add(currentMacro);
 		}
 	}
+	
 	public void setAndRunMacro(Macro macro) {
 		if (macro != null) {
 			setCurrentMacro(macro);
@@ -84,7 +120,7 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 	public Num toRadians(Num num) {
 		return num.div(new NumDouble(angleMode.getFactor()));
 	}
-
+	
 	public Num fromRadians(Num num) {
 		return num.mult(new NumDouble(angleMode.getFactor()));
 	}

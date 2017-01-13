@@ -117,14 +117,20 @@ public class Macro implements Command, Serializable {
 	public void addCommand(Command com) {
 		commands.add(com);
 	}
+
+	public String getListing() {
+		StringBuilder sb = new StringBuilder();
+		for (Command command : commands) {
+			sb.append(String.format("%s\n", command));
+		}
+		return sb.toString();
+	}
 	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(String.format("----%s----\n", name));
-		for (Command command : commands) {
-			sb.append(String.format("\t%s\n", command));
-		}
+		sb.append(getListing());
 		return sb.toString();
 	}
 }

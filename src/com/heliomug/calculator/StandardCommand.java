@@ -233,7 +233,7 @@ public enum StandardCommand implements Command {
 		}
 	}),
 	MACRO_RUN("macroRun", "<run>", true, (Calculator calc) -> {
-		if (calc.hasCurrentMacro()) {
+		if (calc.getCurrentMacro() != null) {
 			calc.runMacro();
 			return true;
 		} else {

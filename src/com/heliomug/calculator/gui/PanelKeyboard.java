@@ -84,19 +84,19 @@ public class PanelKeyboard extends JPanel {
 	}
 	
 	private static final Command[][] LAYOUT = new Command[][] {
-		{DRG, CLEAR_ENTRY, SWAP, STORE, DIV, PUT_7, PUT_8, PUT_9},
-		{LN, EXP, SQRT, POW, SUB, PUT_4, PUT_5, PUT_6},
-		{SIN, COS, TAN, RECIP, MULT, PUT_1, PUT_2, PUT_3},
-		{MOD, COMBO, PI, PM, ADD, PUT_0, PUT_DECIMAL, BACKSPACE},
-		{MACRO_TOGGLE, MACRO_RUN, DROP, ENTER}
+		{DRG, CLEAR_ENTRY, SWAP, STORE, PUT_7, PUT_8, PUT_9, DIV},
+		{LN, EXP, SQRT, POW, PUT_4, PUT_5, PUT_6, SUB},
+		{SIN, COS, TAN, RECIP, PUT_1, PUT_2, PUT_3, MULT},
+		{MOD, COMBO, PI, PM,  PUT_0, PUT_DECIMAL, BACKSPACE, ADD},
+		{MACRO_TOGGLE, MACRO_RUN, DROP, ENTER},
 	};
 	
 	private static final Command[][] ALT = new Command[][] {
-		{DRG, CLEAR_STACK, CYCLE, RAND, DIV, PUT_7, PUT_8, PUT_9},
-		{LOG, EXP10, ROOT, SQUARE, SUB, PUT_4, PUT_5, PUT_6},
-		{ASIN, ACOS, ATAN, RECIP, MULT, PUT_1, PUT_2, PUT_3},
-		{FACT, PERM, PI, PM, ADD, PUT_0, PUT_DECIMAL, BACKSPACE},
-		{MACRO_TOGGLE, MACRO_RUN, DROP, ENTER}
+		{DRG, CLEAR_STACK, CYCLE, RAND, null, null, null, null}, 
+		{LOG, EXP10, ROOT, SQUARE, null, null, null, null}, 
+		{ASIN, ACOS, ATAN, RECIP, null, null, null, null}, 
+		{FACT, PERM, PI, PM, null, null, null, null}, 
+		{null, null, null, null}, 
 	};
 	
 	private String getText(Command command) {

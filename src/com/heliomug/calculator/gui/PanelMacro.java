@@ -53,12 +53,18 @@ public class PanelMacro extends PanelUpdateable {
 				Frame.getFrame().showCalculator();
 			}), c);
 			c.gridx = 2;
+			panel.add(new MacroButton("Show", (ActionEvent e) -> {
+				String listing = macro.getListing();
+				String title = "Listing for Macro " + macro.getName();
+				JOptionPane.showMessageDialog(Frame.getFrame(), listing, title, JOptionPane.INFORMATION_MESSAGE);
+			}), c);
+			c.gridx = 3;
 			panel.add(new MacroButton("Rename", (ActionEvent e) -> {
 				String name = (String)JOptionPane.showInputDialog(Frame.getFrame(), "New name?", macro.getName());
 				macro.setName(name);
 				PanelMacro.this.update();
 			}), c);
-			c.gridx = 3;
+			c.gridx = 4;
 			panel.add(new MacroButton("Delete", (ActionEvent e) -> {
 				String message = "Are you sure you want to delete macro " + macro.getName() + "?";
 				int response = JOptionPane.showConfirmDialog(Frame.getFrame(), message);

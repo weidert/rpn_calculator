@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import com.heliomug.calculator.Calculator;
 import com.heliomug.calculator.Macro;
 
 @SuppressWarnings("serial")
@@ -33,12 +34,17 @@ public class PanelStatus extends JPanel{
 		subpanel = new JPanel();
 		subpanel.setLayout(new BorderLayout());
 		label = new StatusLabel(() -> {
-			Macro macro = Frame.getCalculator().getCurrentMacro();
+			String name = "";
+			Calculator calc = Frame.getCalculator();
+			Macro macro = calc.getCurrentMacro();
 			if (macro == null) {
-				return "macro: [none]";
+				name = "[none]";
+			} else if (calc.isRecording()) {
+				name = "<rec>";
 			} else {
-				return "macro: " + macro.getName();
+				name = macro.getName();
 			}
+			return "macro: " + name;
 		});
 		subpanel.add(label, BorderLayout.WEST);
 		label = new StatusLabel(() -> Frame.getFrame().getCurrentString());

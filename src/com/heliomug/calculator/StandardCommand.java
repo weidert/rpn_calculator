@@ -211,7 +211,7 @@ public enum StandardCommand implements Command {
 		if (stack.isEmpty()) {
 			return false;
 		} else {
-			calc.setMacro(new Macro(stack.peek().getDouble()));
+			calc.setCurrentMacro(new Macro(stack.peek().getDouble()));
 			return true;
 		}
 	}), 
@@ -233,7 +233,7 @@ public enum StandardCommand implements Command {
 		}
 	}),
 	MACRO_RUN("macroRun", "<run>", true, (Calculator calc) -> {
-		if (calc.hasCurrentMacro()) {
+		if (calc.getCurrentMacro() != null) {
 			calc.runMacro();
 			return true;
 		} else {

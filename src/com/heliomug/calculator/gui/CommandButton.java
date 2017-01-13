@@ -2,7 +2,6 @@ package com.heliomug.calculator.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -16,22 +15,19 @@ import javax.swing.SwingUtilities;
 import com.heliomug.calculator.Command;
 
 @SuppressWarnings("serial")
-public class Button extends JButton {
-	private static final Font BIG_FONT = new Font(Font.MONOSPACED, Font.BOLD, 16);
-	private static final Font SMALL_FONT = new Font(Font.MONOSPACED, Font.PLAIN, 10);
-	private static final Font SHORTCUT_FONT = new Font(Font.MONOSPACED, Font.PLAIN, 10);
+public class CommandButton extends JButton {
 	private static final Color SHORTCUT_COLOR = Color.BLUE;
 	private static final Color ALT_COLOR = new Color(0, 191, 0);
 	
-	public Button(Command command) {
+	public CommandButton(Command command) {
 		this(command, command == null ? "" : command.getAbbrev());
 	}
 	
-	public Button(Command command, String text) {
+	public CommandButton(Command command, String text) {
 		this(command, text, null, null);
 	}
 	
-	public Button(Command command, String text, Command alternate, String altText) {
+	public CommandButton(Command command, String text, Command alternate, String altText) {
 		super();
 		setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		setLayout(new BorderLayout());
@@ -61,11 +57,11 @@ public class Button extends JButton {
 		JLabel label;
 
 		label = new JLabel(text, SwingConstants.CENTER);
-		label.setFont(BIG_FONT);
+		label.setFont(Frame.BIG_BUTTON_FONT);
 		panel.add(label, BorderLayout.CENTER);
 		
-		label = new JLabel(" " + KeyMap.getKeyMap().getShortcut(command) + " ");
-		label.setFont(SHORTCUT_FONT);
+		label = new JLabel(" " + KeyMap.getShortcut(command) + " ");
+		label.setFont(Frame.SHORTCUT_FONT);
 		label.setForeground(SHORTCUT_COLOR);
 		panel.add(label, BorderLayout.EAST);
 		
@@ -81,11 +77,11 @@ public class Button extends JButton {
 		JLabel label;
 		
 		label = new JLabel(text, SwingConstants.CENTER);
-		label.setFont(SMALL_FONT);
+		label.setFont(Frame.SMALL_BUTTON_FONT);
 		panel.add(label, BorderLayout.CENTER);
 		
-		label = new JLabel(" " + KeyMap.getKeyMap().getShortcut(command) + " ");
-		label.setFont(SHORTCUT_FONT);
+		label = new JLabel(" " + KeyMap.getShortcut(command) + " ");
+		label.setFont(Frame.SHORTCUT_FONT);
 		label.setForeground(SHORTCUT_COLOR);
 		panel.add(label, BorderLayout.EAST);
 		return panel;

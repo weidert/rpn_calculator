@@ -9,9 +9,12 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
-import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -80,12 +83,8 @@ public class Frame extends JFrame implements Consumer<Command> {
 		
 		setJMenuBar(new MenuBar());
 
-		try {
-			setIconImage(ImageIO.read(new File("res/heliomug256.png")));
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		URL url = Frame.class.getResource("/heliomug256.png");
+		setIconImage(new ImageIcon(url).getImage());
 		
 		add(makeTabbedPane());
 		
@@ -99,6 +98,7 @@ public class Frame extends JFrame implements Consumer<Command> {
 		});
 		setResizable(false);
 		setFocusable(true);
+		setFocusTraversalKeysEnabled(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
@@ -168,6 +168,8 @@ public class Frame extends JFrame implements Consumer<Command> {
 			} else {
 				if (keyCode == KeyEvent.VK_ENTER) {
 					processString();
+				} else if (keyCode == KeyEvent.VK_TAB) {
+					autoComplete(currentString);
 				} else {
 					char letter = e.getKeyChar();
 					//letter = Character.toLowerCase(letter);
@@ -191,7 +193,10 @@ public class Frame extends JFrame implements Consumer<Command> {
 	
 	private void processString() {
 		if (mode == MODE_MACRO_NAME) {
-			getCalculator().getCurrentMacro().setName(currentString);
+			Macro macro = getCalculator().getCurrentMacro();
+			if (macro != null) {
+				macro.setName(currentString);
+			}
 		} else if (mode == MODE_COMMAND) {
 			Command command = StandardCommand.getCommand(currentString);
 			if (command != null) {
@@ -203,7 +208,36 @@ public class Frame extends JFrame implements Consumer<Command> {
 		} 
 		returnToStandardMode();
 	}
+
+	private void autoComplete(String prefix) {
+		List<Command> commands = findCommands(currentString);
+		if (commands.size() == 0) {
+			currentString = "";
+			returnToStandardMode();
+			String message = String.format("No commands begin with \"%s\"", prefix);
+			JOptionPane.showMessageDialog(this, message, "Multiple Options", JOptionPane.INFORMATION_MESSAGE);
+		} else if (commands.size() == 1) {
+			currentString = commands.get(0).getName();
+		} else {
+			StringBuilder sb = new StringBuilder();
+			sb.append("More than one option:\n");
+			for (Command command : commands) {
+				sb.append(command.getName() + "\n");
+			}
+			JOptionPane.showMessageDialog(this, sb.toString(), "Multiple Options", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
 	
+	private List<Command> findCommands(String prefix) {
+		List<Command> li = new ArrayList<>();
+		li.addAll(StandardCommand.getCandidates(prefix));
+		for (Macro macro : getCalculator().getMacroList()) {
+			if (macro.hasPrefix(prefix)) {
+				li.add(macro);
+			}
+		}
+		return li;
+	}
 	
 	public String getCurrentString() { 
 		if (currentString.length() == 0) {

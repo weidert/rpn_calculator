@@ -6,6 +6,7 @@ public interface Num extends Serializable {
 	Num copy();
 	
 	boolean isNegative();
+	boolean isPositive();
 	boolean isZero();
 	boolean lessThan(double d);
 	boolean greaterThan(double d);
@@ -18,6 +19,7 @@ public interface Num extends Serializable {
 
 	Num integerPart();
 	Num fractionalPart();
+	Num abs();
 	
 	Num add(Num other);
 	Num mult(Num other);

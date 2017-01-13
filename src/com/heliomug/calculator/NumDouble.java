@@ -40,10 +40,15 @@ public class NumDouble implements Num {
 	}
 
 	@Override
+	public boolean isPositive() {
+		return value > 0;
+	}
+
+	@Override
 	public boolean isZero() {
 		return value == 0.0;
 	}
-
+	
 	@Override
 	public boolean lessThan(double d) {
 		return value < d;
@@ -87,7 +92,10 @@ public class NumDouble implements Num {
 		return new NumDouble(value - (int)value);
 	}
 
-	
+	@Override
+	public Num abs() {
+		return new NumDouble(Math.abs(value));
+	}
 	
 	@Override
 	public Num add(Num other) {
@@ -113,7 +121,7 @@ public class NumDouble implements Num {
 	
 	@Override
 	public Num pm() {
-		return new NumDouble(-1 * value);
+		return new NumDouble(-1 * value, decimalPlace);
 	}
 
 	@Override
@@ -276,11 +284,12 @@ public class NumDouble implements Num {
 
 	@Override
 	public Num addDigit(int dig) {
+		int diff = dig * (Math.signum(value) < 0 ? -1 : 1);
 		if (decimalPlace == 0) {
-			return new NumDouble(value * BASE + dig, 0);
+			return new NumDouble(value * BASE + diff, 0);
 		} else {
 			if (decimalPlace < MAX_AFTER_DEC) {
-				return new NumDouble(value + dig * Math.pow(BASE, - decimalPlace), decimalPlace + 1);
+				return new NumDouble(value + diff * Math.pow(BASE, - decimalPlace), decimalPlace + 1);
 			}
 			return this;
 		}

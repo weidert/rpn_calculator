@@ -114,10 +114,28 @@ public enum StandardCommand implements Command {
 	RECIP("recip", "<1/x>", 1, (Stack stack) -> {
 		stack.push(stack.pop().recip());
 	}, "flip", "reciprocal"),
-	PM("pm", "<+/->", 1, (Stack stack) -> {
-		stack.push(stack.pop().pm());
+	PM("pm", "<+/->", true, (Calculator calc) -> {
+		Stack stack = calc.getStack();
+		if (stack.isEmpty()) {
+			return false;
+		} else {
+			stack.push(stack.pop().pm());
+			return true;
+		}
+	}), 
+	ABS("abs", "<abs", 1, (Stack stack) -> {
+		stack.push(stack.pop().abs());
 	}),
-
+	SIGN("sign", "<sgn>", 1, (Stack stack) -> {
+		Num num = stack.pop();
+		if (num.isZero()) {
+			stack.push(new NumDouble(0));
+		} else if (num.isPositive()) {
+			stack.push(new NumDouble(1));
+		} else {
+			stack.push(new NumDouble(-1));
+		}
+	}), 
 	SIN("sin", "<sin>", true, new TrigFxn((Num num) -> num.sin()), "sine"),
 	COS("cos", "<cos>", true, new TrigFxn((Num num) -> num.cos()), "cosine"),
 	TAN("tan", "<tan>", true, new TrigFxn((Num num) -> num.tan()), "tangent"),

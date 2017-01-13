@@ -24,6 +24,8 @@ public class PanelKeyboard extends JPanel {
 		textMap.put(DIV, "\u00f7");
 		textMap.put(MOD, "%");
 		
+		textMap.put(ABS, "abs");
+		textMap.put(SIGN, "sign");
 		textMap.put(PM, "+/-");
 		textMap.put(RECIP, "1/x");
 		
@@ -95,8 +97,8 @@ public class PanelKeyboard extends JPanel {
 	private static final Command[][] ALT = new Command[][] {
 		{EXIT, CLEAR_STACK, CYCLE, RAND, null, null, null, null}, 
 		{LOG, EXP10, ROOT, SQUARE, null, null, null, null}, 
-		{ASIN, ACOS, ATAN, RECIP, null, null, null, null}, 
-		{FACT, PERM, DRG, PM, null, null, null, null}, 
+		{ASIN, ACOS, ATAN, ABS, null, null, null, null}, 
+		{FACT, PERM, DRG, SIGN, null, null, null, null}, 
 		{null, null, null, null}, 
 	};
 	

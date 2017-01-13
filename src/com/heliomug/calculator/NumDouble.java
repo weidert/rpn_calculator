@@ -14,7 +14,7 @@ public class NumDouble implements Num {
 		decimalPlace = 0;
 	}
 
-	public NumDouble(int val) {
+	public NumDouble(long val) {
 		this(val, 0);
 	}
 	
@@ -45,11 +45,6 @@ public class NumDouble implements Num {
 	}
 
 	@Override
-	public boolean isInteger() {
-		return fractionalPart().getDouble() == 0.0;
-	}
-
-	@Override
 	public boolean lessThan(double d) {
 		return value < d;
 	}
@@ -71,8 +66,8 @@ public class NumDouble implements Num {
 
 	
 	@Override
-	public int getInteger() {
-		return (int)value;
+	public long getLong() {
+		return (long)value;
 	}
 	
 	@Override
@@ -187,11 +182,11 @@ public class NumDouble implements Num {
 	
 	@Override
 	public Num combo(Num other) {
-		int n = getInteger();
-		int k = other.getInteger();
-		int in = 1;
-		int ik = 1;
-		int ij = 1;
+		long n = getLong();
+		long k = other.getLong();
+		long in = 1;
+		long ik = 1;
+		long ij = 1;
 		long result = 1;
 		while (in <= n) {
 			result *= in;
@@ -218,8 +213,8 @@ public class NumDouble implements Num {
 
 	@Override
 	public Num perm(Num other) {
-		int n = getInteger();
-		int k = other.getInteger();
+		long n = getLong();
+		long k = other.getLong();
 		int in = 1;
 		int ik = 1;
 		long result = 1;
@@ -241,7 +236,7 @@ public class NumDouble implements Num {
 	@Override
 	public Num fact() {
 		long fact = 1;
-		int x = getInteger();
+		long x = getLong();
 		for (int i = 2 ; i <= x ; i++) {
 			fact *= i;
 		}
@@ -250,7 +245,7 @@ public class NumDouble implements Num {
 
 	@Override
 	public Num mod(Num other) {
-		int mod = getInteger() % other.getInteger(); 
+		long mod = getLong() % other.getLong(); 
 		return new NumDouble(mod);
 	}
 	
@@ -292,15 +287,21 @@ public class NumDouble implements Num {
 	}
 
 	public String toStringWithDec(int dec) {
-		String fmt = "%." + dec + "f";
-		return String.format(fmt, value);
+		if (value > Long.MAX_VALUE || value < Long.MIN_VALUE) {
+			return String.valueOf(value);
+		} else {
+			String fmt = "%." + dec + "f";
+			return String.format(fmt, value);
+		}
 	}
 	
 	public String toString() {
-		if (decimalPlace == 0) {
-			return String.valueOf((int)value);
+		if (value > Long.MAX_VALUE || value < Long.MIN_VALUE) {
+			return String.valueOf(value);
+		} else if (decimalPlace == 0) {
+			return String.valueOf((long)value);
 		} else if (decimalPlace == 1) {
-			return String.valueOf((int)value) + ".";
+			return String.valueOf((long)value) + ".";
 		} else {
 			String fmt = "%." + (decimalPlace - 1) + "f";
 			return String.format(fmt, value);

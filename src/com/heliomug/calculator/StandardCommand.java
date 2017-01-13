@@ -211,7 +211,7 @@ public enum StandardCommand implements Command {
 		if (stack.isEmpty()) {
 			return false;
 		} else {
-			calc.setMacro(new Macro(stack.peek().getDouble()));
+			calc.setCurrentMacro(new Macro(stack.peek().getDouble()));
 			return true;
 		}
 	}), 

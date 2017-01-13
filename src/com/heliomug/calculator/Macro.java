@@ -37,7 +37,7 @@ public class Macro implements Command, Serializable {
 
 			@Override
 			public String getAbbrev() {
-				return getName();
+				return String.format("<%s>", getName());
 			}
 
 			@Override
@@ -52,12 +52,17 @@ public class Macro implements Command, Serializable {
 
 			@Override
 			public boolean isRecordable() {
-				return true;
+				return false;
 			}
 
 			@Override
 			public boolean hasPrefix(String prefix) {
 				return false;
+			}
+			
+			@Override
+			public String toString() {
+				return getAbbrev();
 			}
 			
 		});
@@ -102,7 +107,7 @@ public class Macro implements Command, Serializable {
 	
 	@Override
 	public boolean isRecordable() {
-		return true;
+		return false;
 	}
 	
 	public void setName(String name) {

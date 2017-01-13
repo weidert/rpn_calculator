@@ -7,13 +7,12 @@ public interface Num extends Serializable {
 	
 	boolean isNegative();
 	boolean isZero();
-	boolean isInteger();
 	boolean lessThan(double d);
 	boolean greaterThan(double d);
 	boolean lessThanEq(double d);
 	boolean greaterThanEq(double d);
 	
-	int getInteger();
+	long getLong();
 	double getDouble();
 	String toStringWithDec(int places);
 

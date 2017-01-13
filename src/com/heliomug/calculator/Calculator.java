@@ -22,14 +22,14 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 	private Macro currentMacro;
 	private List<Macro> macroList;
 	
-	transient private List<Command> commandList;
+	transient private List<Command> commandHistory;
 	
 	transient private String status;
 	
 	public Calculator() {
 		stack = new Stack();
 		macroList = new ArrayList<>();
-		commandList = new ArrayList<>();
+		commandHistory = new ArrayList<>();
 		currentMacro = null;
 		isEntryEditable = false;
 		isEntryClears = true;
@@ -45,7 +45,7 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 	public boolean hasCurrentMacro() { return currentMacro != null; }
 	public String getStatus() { return status == null ? "" : status; }
 	public AngleMode getAngleMode() { return angleMode; }
-	public String getCurrentMacroName() { return currentMacro == null ? "[none]" : currentMacro.getName(); } 
+	public Macro getCurrentMacro() { return currentMacro; } 
 	public Macro getMacro(String name) {
 		// would be more efficient with a map, 
 		// but then have to deal with renaming behind map's back
@@ -56,39 +56,39 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 		}
 		return null;
 	}
-	public void setMacro(String name) {
-		Macro macro = getMacro(name);
-		if (macro != null) {
-			setMacro(macro);
-		}
+	public List<Macro> getMacroList() {
+		return macroList;
 	}
-	public void setMacro(Macro macro) {
-		currentMacro = macro;
-	}
-	public void setAndRunMacro(String name) {
-		Macro macro = getMacro(name);
-		if (macro != null) {
-			setMacro(macro);
-			runMacro();
-		}
-	}
-	
+	public List<Command> getCommandHistory() { return commandHistory; }
 	
 	public void setNextAngleMode() { angleMode = angleMode.next(); }
 	public void setEntryClears(boolean b) { isEntryClears = b; }
 	public void setEntryEditable(boolean b) { isEntryEditable = b; }
 
+	public void removeMacro(Macro macro) {
+		macroList.remove(macro);
+	}
+	public void setCurrentMacro(Macro macro) {
+		currentMacro = macro;
+		if (!macroList.contains(macro)) {
+			macroList.add(currentMacro);
+		}
+	}
+	public void setAndRunMacro(Macro macro) {
+		if (macro != null) {
+			setCurrentMacro(macro);
+			runMacro();
+		}
+	}
+
 	public Num toRadians(Num num) {
 		return num.div(new NumDouble(angleMode.getFactor()));
 	}
-	
+
 	public Num fromRadians(Num num) {
 		return num.mult(new NumDouble(angleMode.getFactor()));
 	}
-	
-	public void setMacroName(String name) {
-		currentMacro.setName(name);
-	}
+
 	
 	public void runMacro() {
 		if (currentMacro != null) {
@@ -97,40 +97,14 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 	}
 	
 	public void startMacro() {
-		currentMacro = new Macro();
+		setCurrentMacro(new Macro());
 		isRecording = true;
 	}
 
 	public void stopMacro() {
 		isRecording = false;
-		macroList.add(currentMacro);
 	}
 	
-	public String getMacroListing() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("MACROS: \n\n");
-		if (macroList.size() == 0) {
-			sb.append("[no macros]");
-		} else {
-			for (Macro macro : macroList) {
-				sb.append(macro.toString() + "\n");
-			}
-		}
-		return sb.toString();
-	}
-	
-	public String getCommandListing() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("COMMANDS: \n\n");
-		if (commandList == null || commandList.size() == 0) {
-			sb.append("[no commands]");
-		} else {
-			for (Command command : commandList) {
-				sb.append(command.getAbbrev() + "\n");
-			}
-		}
-		return sb.toString();
-	}
 	
 	@Override
 	public String toString() {
@@ -155,16 +129,21 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 			if (isRecording && !command.isMacro()) {
 				currentMacro.addCommand(command);
 			}
-			if (commandList == null) {
-				commandList = new ArrayList<>();
-			}
-			commandList.add(command);
 		}
 		boolean success = command.apply(this);
 
-		if (command.isRecordable()) {
-			status = success ? command.getAbbrev() : ERROR_MESSAGE;
+		if (success) {
+			if (command.isRecordable()) {
+				if (commandHistory == null) {
+					commandHistory = new ArrayList<>();
+				}
+				commandHistory.add(command);
+				status = command.getAbbrev();
+			} 
+		} else {
+			status = ERROR_MESSAGE;
 		}
+		
 		return success; 
 	}
 }

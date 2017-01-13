@@ -20,6 +20,8 @@ public class KeyMap {
 	private static Map<Command, KeyStroke> reverseMap = new HashMap<>();
 	
 	static {
+		REPLACEMENT_MAP.put("Open Bracket", "[");
+		REPLACEMENT_MAP.put("Close Bracket", "]");
 		REPLACEMENT_MAP.put("Slash", "/");
 		REPLACEMENT_MAP.put("Equals", "=");
 		REPLACEMENT_MAP.put("Backspace", "\u2190");
@@ -127,6 +129,8 @@ public class KeyMap {
 		addMapping(VK_T, MACRO_TOGGLE, false); 
 		addMapping(VK_T, STORE, true); 
 		
+		addMapping(VK_OPEN_BRACKET, ABS, false);
+		addMapping(VK_CLOSE_BRACKET, SIGN, false);
 		addMapping(VK_HOME, UNDO, false);
 		addMapping(VK_HOME, EXIT, true);
 		addMapping(VK_DELETE, CLEAR_ENTRY, false);

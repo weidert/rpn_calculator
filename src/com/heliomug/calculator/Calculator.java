@@ -142,6 +142,17 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 		macroList.addAll(li);
 	}
 	
+	public boolean removeCurrentMacro() {
+		if (currentMacro == null) {
+			return false;
+		} else {
+			macroList.remove(currentMacro);
+			currentMacro = null;
+			isRecording = false;
+			return true;
+		}
+	}
+	
 	public void setCurrentMacro(Macro macro) {
 		currentMacro = macro;
 		if (!macroList.contains(macro)) {

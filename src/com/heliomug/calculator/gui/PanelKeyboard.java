@@ -44,7 +44,7 @@ public class PanelKeyboard extends JPanel {
 		textMap.put(COMBO, "yCx");
 		textMap.put(PERM, "yPx");
 
-		textMap.put(RAND, "rand");
+		textMap.put(RAND, "random");
 
 		textMap.put(EXP, "e^x");
 		textMap.put(LN, "ln");

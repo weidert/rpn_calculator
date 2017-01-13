@@ -23,6 +23,7 @@ public class KeyMap {
 		REPLACEMENT_MAP.put("Slash", "/");
 		REPLACEMENT_MAP.put("Equals", "=");
 		REPLACEMENT_MAP.put("Backspace", "\u2190");
+		REPLACEMENT_MAP.put("Home", "Home");
 		REPLACEMENT_MAP.put("Insert", "Ins");
 		REPLACEMENT_MAP.put("Delete", "Del");
 		REPLACEMENT_MAP.put("Period", ".");
@@ -126,6 +127,8 @@ public class KeyMap {
 		addMapping(VK_T, MACRO_TOGGLE, false); 
 		addMapping(VK_T, STORE, true); 
 		
+		addMapping(VK_HOME, UNDO, false);
+		addMapping(VK_HOME, EXIT, true);
 		addMapping(VK_DELETE, CLEAR_ENTRY, false);
 		addMapping(VK_DELETE, CLEAR_STACK, true);
 		addMapping(VK_PAGE_DOWN, CYCLE, false);

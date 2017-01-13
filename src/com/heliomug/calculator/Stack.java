@@ -13,6 +13,16 @@ public class Stack implements Serializable {
 		clear();
 	}
 	
+	public Stack copy() {
+		Stack copy = new Stack();
+		Node n = tail;
+		while (n != null) {
+			copy.push(n.payload);
+			n = n.prev;
+		}
+		return copy;
+	}
+	
 	public boolean isEmpty() {
 		return size == 0;
 	}
@@ -116,7 +126,6 @@ public class Stack implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("stack: " + size);
 		Node n = head;
 		for (int i = 0 ; i < size() ; i++) {
 			Num num = n.payload;

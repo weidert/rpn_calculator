@@ -78,13 +78,14 @@ public class PanelKeyboard extends JPanel {
 		textMap.put(MACRO_TOGGLE, "rec/stop");
 		textMap.put(MACRO_RUN, "play");
 
+		textMap.put(UNDO, "\u238c");
 		textMap.put(DRG, "DRG");
-		textMap.put(EXIT, "X");
+		textMap.put(EXIT, "exit");
 		//textMap.put(, "\u2600\u2615");
 	}
 	
 	private static final Command[][] LAYOUT = new Command[][] {
-		{DRG, CLEAR_ENTRY, SWAP, STORE, PUT_7, PUT_8, PUT_9, DIV},
+		{UNDO, CLEAR_ENTRY, SWAP, STORE, PUT_7, PUT_8, PUT_9, DIV},
 		{LN, EXP, SQRT, POW, PUT_4, PUT_5, PUT_6, SUB},
 		{SIN, COS, TAN, RECIP, PUT_1, PUT_2, PUT_3, MULT},
 		{MOD, COMBO, PI, PM,  PUT_0, BACKSPACE, PUT_DECIMAL, ADD},
@@ -92,10 +93,10 @@ public class PanelKeyboard extends JPanel {
 	};
 	
 	private static final Command[][] ALT = new Command[][] {
-		{DRG, CLEAR_STACK, CYCLE, RAND, null, null, null, null}, 
+		{EXIT, CLEAR_STACK, CYCLE, RAND, null, null, null, null}, 
 		{LOG, EXP10, ROOT, SQUARE, null, null, null, null}, 
 		{ASIN, ACOS, ATAN, RECIP, null, null, null, null}, 
-		{FACT, PERM, PI, PM, null, null, null, null}, 
+		{FACT, PERM, DRG, PM, null, null, null, null}, 
 		{null, null, null, null}, 
 	};
 	

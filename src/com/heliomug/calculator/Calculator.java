@@ -157,8 +157,12 @@ public class Calculator implements Function<Command, Boolean>, Serializable {
 	
 	public void setAndRunMacro(Macro macro) {
 		if (macro != null) {
-			setCurrentMacro(macro);
-			runCurrentMacro();
+			if (isRecording) {
+				apply(macro);
+			} else {
+				setCurrentMacro(macro);
+				runCurrentMacro();
+			}
 		}
 	}
 

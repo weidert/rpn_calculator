@@ -52,7 +52,7 @@ public class Macro implements Command, Serializable {
 
 			@Override
 			public boolean isRecordable() {
-				return false;
+				return true;
 			}
 
 			@Override
@@ -70,14 +70,12 @@ public class Macro implements Command, Serializable {
 	
 	@Override
 	public boolean apply(Calculator calc) {
-		boolean success = true;
 		for (Command command : commands) {
 			if (!calc.apply(command)) {
-				success = false;
-				break;
+				return false;
 			}
 		}
-		return success;
+		return true;
 	}
 	
 	@Override

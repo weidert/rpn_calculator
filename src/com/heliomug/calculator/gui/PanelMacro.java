@@ -63,7 +63,7 @@ public class PanelMacro extends PanelUpdateable {
 				c.gridx = 3;
 				panel.add(new MacroButton("Rename", (ActionEvent e) -> {
 					String name = (String)JOptionPane.showInputDialog(Frame.getFrame(), "New name?", macro.getName());
-					if (!Frame.getCalculator().commandExists(name)) {
+					if (!Frame.getCalculator().commandExists(name) && name != null) {
 						macro.setName(name.trim());
 						PanelMacro.this.update();
 					}

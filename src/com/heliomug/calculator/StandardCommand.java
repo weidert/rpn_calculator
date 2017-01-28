@@ -157,18 +157,17 @@ public enum StandardCommand implements Command {
 	PUT_8(8), 
 	PUT_9(9), 
 	PUT_DECIMAL(".", "< . >", true, (Calculator calc) -> {
-		if (calc.isEntryEditable()) {
-			Stack stack = calc.getStack();
-			if (stack.isEmpty()) {
-				stack.push(new NumDouble());
-			}
-			stack.push(stack.pop().addDecimal());
-			calc.setEntryEditable(true);
-			calc.setEntryClears(false);
-			return true;
-		} else {
-			return false;
+		Stack stack = calc.getStack();
+		if (calc.isEntryClears()) {
+			stack.pop();
+			stack.push(new NumDouble());
+		} else if (stack.isEmpty() || !calc.isEntryEditable()) {
+			stack.push(new NumDouble());
 		}
+		stack.push(stack.pop().addDecimal());
+		calc.setEntryEditable(true);
+		calc.setEntryClears(false);
+		return true;
 	}),
 	BACKSPACE("\u2190", "< \u2190 >", true, (Calculator calc) -> {
 		Stack stack = calc.getStack();
